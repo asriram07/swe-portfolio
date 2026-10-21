@@ -148,7 +148,9 @@
     const laneGhostBox = $('#lane-ghosts');
     laneGhostBox.innerHTML = GHOST_COLORS.map((c) => `<div class="lane-ghost">${ghostSVG(c)}</div>`).join('');
     const laneGhosts = [...laneGhostBox.children];
-    $('#hero-ghost').innerHTML = ghostSVG('var(--red)');
+    const heroGhostBox = $('#hero-ghosts');
+    heroGhostBox.innerHTML = GHOST_COLORS.map((c) => `<div class="hero-ghost">${ghostSVG(c)}</div>`).join('');
+    const heroGhosts = [...heroGhostBox.children];
 
     // ------------------------------------------------------------------
     // Dots (lane + hero track)
@@ -157,8 +159,7 @@
     const lanePac = $('#lane-pac');
     const heroTrack = $('#hero-track');
     const heroPac = $('#hero-pac');
-    const heroGhost = $('#hero-ghost');
-    const hero = $('#top');
+    const heroPop = $('#hero-pop');
     let laneDots = [];
     let heroDots = [];
 
@@ -190,15 +191,117 @@
             const pos = i * hs;
             el.style.left = pos + 'px';
             hbox.appendChild(el);
-            heroDots.push({ el, pos });
+            heroDots.push({ el, pos, pellet: i === hn, eaten: false });
         }
     }
 
     // ------------------------------------------------------------------
-    // Scroll-driven motion
+    // Score
     // ------------------------------------------------------------------
     const scoreEl = $('#score');
-    let chompTimer;
+    let laneScore = 0;
+    let autoScore = 0;
+    const renderScore = () => (scoreEl.textContent = String(laneScore + autoScore).padStart(6, '0'));
+
+    // ------------------------------------------------------------------
+    // Hero: endless auto-play loop
+    //   eat  → Pac-Man eats dots left to right, ghosts follow behind
+    //   chase → power pellet eaten: ghosts turn blue, Pac-Man turns and eats them
+    //   pause → short beat, dots respawn, repeat
+    // ------------------------------------------------------------------
+    const game = { x: 0, dir: 1, phase: 'eat', gx: [], combo: 0, pauseUntil: 0, last: 0, visible: true };
+
+    function resetRound() {
+        const hs = heroPac.offsetWidth;
+        const gap = hs * 1.35;
+        game.x = -hs;
+        game.dir = 1;
+        game.phase = 'eat';
+        game.combo = 0;
+        heroDots.forEach((d) => {
+            d.eaten = false;
+            d.el.classList.remove('eaten');
+        });
+        heroGhosts.forEach((g, i) => {
+            game.gx[i] = game.x - (i + 1) * gap - hs;
+            g.classList.remove('scared', 'gone');
+        });
+        drawHero();
+    }
+
+    function drawHero() {
+        heroPac.style.transform = `translateX(${game.x}px) scaleX(${game.dir})`;
+        heroGhosts.forEach((g, i) => (g.style.transform = `translateX(${game.gx[i]}px)`));
+    }
+
+    function popScore(points, x) {
+        heroPop.textContent = points;
+        heroPop.style.left = x + 'px';
+        heroPop.classList.remove('show');
+        void heroPop.offsetWidth;
+        heroPop.classList.add('show');
+    }
+
+    function step(t) {
+        const dt = Math.min(0.05, (t - (game.last || t)) / 1000);
+        game.last = t;
+        requestAnimationFrame(step);
+        if (!game.visible) return;
+
+        const tw = heroTrack.clientWidth;
+        const hs = heroPac.offsetWidth;
+        const speed = Math.max(120, tw / 7);
+
+        if (game.phase === 'pause') {
+            if (t >= game.pauseUntil) resetRound();
+            return;
+        }
+
+        if (game.phase === 'eat') {
+            game.x += speed * dt;
+            const gap = hs * 1.35;
+            heroGhosts.forEach((_, i) => (game.gx[i] = game.x - (i + 1) * gap - hs * 0.2));
+            heroDots.forEach((d) => {
+                if (d.eaten || d.pos > game.x + hs / 2) return;
+                d.eaten = true;
+                d.el.classList.add('eaten');
+                autoScore += d.pellet ? 50 : 10;
+                if (d.pellet) {
+                    game.phase = 'chase';
+                    game.dir = -1;
+                    heroGhosts.forEach((g) => g.classList.add('scared'));
+                }
+            });
+        } else if (game.phase === 'chase') {
+            game.x -= speed * 1.35 * dt;
+            let alive = 0;
+            heroGhosts.forEach((g, i) => {
+                if (g.classList.contains('gone')) return;
+                game.gx[i] -= speed * 0.55 * dt;
+                const gw = g.offsetWidth;
+                if (game.x <= game.gx[i] + gw * 0.4) {
+                    g.classList.add('gone');
+                    game.combo++;
+                    const pts = 100 * Math.pow(2, game.combo);
+                    autoScore += pts;
+                    popScore(pts, game.gx[i]);
+                } else if (game.gx[i] < -gw) {
+                    g.classList.add('gone');
+                } else {
+                    alive++;
+                }
+            });
+            if (!alive || game.x < -hs) {
+                game.phase = 'pause';
+                game.pauseUntil = t + 900;
+            }
+        }
+
+        drawHero();
+        renderScore();
+    }
+
+    new IntersectionObserver(([en]) => (game.visible = en.isIntersecting)).observe(heroTrack);
 
     function update() {
         const max = document.documentElement.scrollHeight - innerHeight;
@@ -222,34 +325,16 @@
             g.style.opacity = gy < -4 ? 0 : 1;
         });
 
-        // Hero: Pac-Man eats across while the hero is pinned.
-        const hp = clamp(scrollY / Math.max(1, hero.offsetHeight - innerHeight), 0, 1);
-        const tw = heroTrack.clientWidth;
-        const hs = heroPac.offsetWidth;
-        const x = hp * (tw - hs);
-        heroPac.style.transform = `translateX(${x}px)`;
-        let heroEaten = 0;
-        heroDots.forEach((d) => {
-            const e = d.pos < x + hs / 2;
-            d.el.classList.toggle('eaten', e);
-            if (e) heroEaten++;
-        });
-        const gx = x - hs * 2.4;
-        heroGhost.style.transform = `translateX(${gx}px)`;
-        heroGhost.style.opacity = gx < 0 ? 0 : 1;
-
-        scoreEl.textContent = String((eaten + heroEaten) * 10).padStart(6, '0');
+        laneScore = eaten * 10;
+        renderScore();
 
         if (!reduced) {
             lanePac.classList.add('chomp');
-            heroPac.classList.toggle('chomp', hp > 0 && hp < 1);
             clearTimeout(chompTimer);
-            chompTimer = setTimeout(() => {
-                lanePac.classList.remove('chomp');
-                heroPac.classList.remove('chomp');
-            }, 160);
+            chompTimer = setTimeout(() => lanePac.classList.remove('chomp'), 160);
         }
     }
+    let chompTimer;
 
     let ticking = false;
     addEventListener('scroll', () => {
@@ -263,6 +348,7 @@
 
     addEventListener('resize', () => {
         buildDots();
+        resetRound();
         update();
     });
 
@@ -307,9 +393,18 @@
 
     // Fonts change layout widths; rebuild once they're ready.
     buildDots();
+    resetRound();
     update();
+    if (reduced) {
+        game.x = 0;
+        heroGhosts.forEach((g) => g.classList.add('gone'));
+        drawHero();
+    } else {
+        requestAnimationFrame(step);
+    }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
         buildDots();
+        if (!reduced) resetRound();
         update();
     });
 })();

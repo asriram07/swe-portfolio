@@ -103,7 +103,8 @@ a {
     fill: currentColor;
 }
 
-body.scared .ghost {
+body.scared .lane-ghost .ghost,
+.hero-ghost.scared .ghost {
     color: var(--scared);
     animation: scaredFlash 0.5s steps(2) infinite;
 }
@@ -348,14 +349,11 @@ main {
 
 /* ---------- Hero ---------- */
 .hero {
-    height: 190vh;
     max-width: 1040px;
     margin: 0 auto;
 }
 
 .hero-sticky {
-    position: sticky;
-    top: 0;
     min-height: 100vh;
     padding-top: var(--top);
     display: flex;
@@ -376,8 +374,17 @@ main {
 }
 
 .hero-name {
-    font-size: clamp(30px, 6.6vw, 82px);
-    line-height: 1.18;
+    font-family: var(--sans);
+    font-weight: 800;
+    font-size: clamp(52px, 9.4vw, 120px);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: var(--ink);
+}
+
+.hero-name .hl {
+    background: linear-gradient(transparent 64%, var(--pac) 64%, var(--pac) 92%, transparent 92%);
+    padding: 0 0.04em;
 }
 
 .hero-role {
@@ -445,6 +452,43 @@ main {
     height: 40px;
     margin-top: -20px;
     will-change: transform;
+    transition: opacity 0.15s ease;
+}
+
+.hero-ghost.gone {
+    opacity: 0;
+}
+
+.score-pop {
+    position: absolute;
+    top: -22px;
+    left: 0;
+    font-size: 11px;
+    color: var(--maze);
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.score-pop.show {
+    animation: popUp 0.9s ease-out forwards;
+}
+
+@keyframes popUp {
+    0% {
+        opacity: 0;
+        translate: 0 6px;
+    }
+
+    20% {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    100% {
+        opacity: 0;
+        translate: 0 -14px;
+    }
 }
 
 .scroll-hint {
@@ -929,18 +973,17 @@ main {
         padding: 0;
     }
 
-    .hero {
-        height: auto;
-    }
-
     .hero-sticky {
-        position: static;
         min-height: 0;
         padding: 0;
     }
 
     .hero-name {
-        font-size: 22px;
+        font-size: 30px;
+    }
+
+    .hero-name br {
+        display: none;
     }
 
     .section {

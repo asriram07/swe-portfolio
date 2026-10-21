@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -35,20 +35,21 @@
     </div>
 
     <main>
-        <!-- Hero (pinned while Pac-Man eats across) -->
+        <!-- Hero (Pac-Man plays on its own in an endless loop) -->
         <section class="hero" id="top">
             <div class="hero-sticky">
                 <p class="ready pixel">PLAYER 1 &nbsp;·&nbsp; <span class="blink">READY!</span></p>
-                <h1 class="pixel hero-name">SRIRAM<br>ANUMANDLA</h1>
+                <h1 class="hero-name">Sriram<br><span class="hl">Anumandla</span></h1>
                 <p class="hero-role">Software Development Engineer <b>@ Amazon</b> · AI Engineer</p>
                 <p class="hero-lead">I build scalable distributed systems and AI tooling that real engineers use every
                     day.</p>
                 <div class="hero-track" id="hero-track" aria-hidden="true">
                     <div id="hero-dots"></div>
-                    <div class="hero-ghost" id="hero-ghost"></div>
-                    <div class="pac hero-pac" id="hero-pac"></div>
+                    <div id="hero-ghosts"></div>
+                    <div class="pac hero-pac chomp" id="hero-pac"></div>
+                    <div class="score-pop pixel" id="hero-pop"></div>
                 </div>
-                <p class="scroll-hint pixel">SCROLL TO PLAY ↓</p>
+                <p class="scroll-hint pixel">SCROLL DOWN ↓</p>
             </div>
         </section>
 
