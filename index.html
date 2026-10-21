@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SriramOS — Sriram Anumandla</title>
+    <meta name="description"
+        content="Sriram Anumandla — Software Development Engineer at Amazon & AI Engineer. An interactive, OS-style portfolio.">
+    <meta property="og:title" content="SriramOS — Sriram Anumandla">
+    <meta property="og:description" content="SDE @ Amazon · AI Engineer. Boot up the portfolio.">
+    <meta name="theme-color" content="#06070b">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <noscript>
+        <p style="padding:24px;font-family:sans-serif;color:#fff">
+            SriramOS needs JavaScript. See the classic portfolio at
+            <a href="https://asriram07.github.io/MyPortfolio/">asriram07.github.io/MyPortfolio</a>.
+        </p>
+    </noscript>
+
+    <!-- Boot screen -->
+    <div id="boot" class="boot" aria-hidden="true">
+        <pre id="boot-log" class="boot-log"></pre>
+        <div class="boot-hint">press any key to skip</div>
+    </div>
+
+    <!-- Wallpaper -->
+    <div class="wallpaper" id="wallpaper" aria-hidden="true">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+        <div class="grid"></div>
+        <div class="spot"></div>
+        <div class="wordmark"><span>SRIRAM</span><span class="fill">ANUMANDLA</span></div>
+        <div class="noise"></div>
+    </div>
+
+    <!-- Menu bar -->
+    <header class="menubar">
+        <div class="menubar-left">
+            <button class="os-logo" data-open="about"><span class="diamond">◆</span> SriramOS</button>
+            <button class="menu-item" data-open="experience">Work</button>
+            <button class="menu-item" data-open="projects">Projects</button>
+            <button class="menu-item" data-open="resume">Résumé</button>
+            <button class="menu-item" data-open="terminal">Terminal</button>
+        </div>
+        <div class="menubar-right">
+            <span class="open-to-work"><span class="status-dot"></span>open to opportunities</span>
+            <a class="menu-item classic" href="https://asriram07.github.io/MyPortfolio/">Classic ↗</a>
+            <button class="menu-item kbd-btn" id="spotlight-btn" aria-label="Search"><kbd id="kbd-hint">⌘K</kbd></button>
+            <span class="clock" id="clock"></span>
+        </div>
+    </header>
+
+    <!-- Desktop -->
+    <div class="desktop" id="desktop">
+        <div class="desktop-icons" id="desktop-icons"></div>
+    </div>
+
+    <div id="windows" class="windows"></div>
+
+    <!-- Dock -->
+    <nav class="dock" id="dock" aria-label="Dock"></nav>
+
+    <!-- Spotlight -->
+    <div id="spotlight" class="spotlight" hidden>
+        <div class="spot-box" role="dialog" aria-label="Search">
+            <input id="spot-input" type="text" placeholder="Search apps & actions…" autocomplete="off"
+                spellcheck="false">
+            <ul id="spot-list" class="spot-list"></ul>
+            <div class="spot-foot"><span>↑↓ navigate</span><span>↵ open</span><span>esc close</span></div>
+        </div>
+    </div>
+
+    <div id="print-root"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
