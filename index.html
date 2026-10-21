@@ -3,84 +3,112 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>SriramOS — Sriram Anumandla</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sriram Anumandla — SDE & AI Engineer</title>
     <meta name="description"
-        content="Sriram Anumandla — Software Development Engineer at Amazon & AI Engineer. An interactive, OS-style portfolio.">
-    <meta property="og:title" content="SriramOS — Sriram Anumandla">
-    <meta property="og:description" content="SDE @ Amazon · AI Engineer. Boot up the portfolio.">
-    <meta name="theme-color" content="#06070b">
+        content="Sriram Anumandla — Software Development Engineer at Amazon & AI Engineer. Distributed systems and AI tooling.">
+    <meta name="theme-color" content="#fffdf6">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <noscript>
-        <p style="padding:24px;font-family:sans-serif;color:#fff">
-            SriramOS needs JavaScript. See the classic portfolio at
-            <a href="https://asriram07.github.io/MyPortfolio/">asriram07.github.io/MyPortfolio</a>.
-        </p>
-    </noscript>
-
-    <!-- Boot screen -->
-    <div id="boot" class="boot" aria-hidden="true">
-        <pre id="boot-log" class="boot-log"></pre>
-        <div class="boot-hint">press any key to skip</div>
-    </div>
-
-    <!-- Wallpaper -->
-    <div class="wallpaper" id="wallpaper" aria-hidden="true">
-        <div class="blob b1"></div>
-        <div class="blob b2"></div>
-        <div class="blob b3"></div>
-        <div class="grid"></div>
-        <div class="spot"></div>
-        <div class="wordmark"><span>SRIRAM</span><span class="fill">ANUMANDLA</span></div>
-        <div class="noise"></div>
-    </div>
-
-    <!-- Menu bar -->
-    <header class="menubar">
-        <div class="menubar-left">
-            <button class="os-logo" data-open="about"><span class="diamond">◆</span> SriramOS</button>
-            <button class="menu-item" data-open="experience">Work</button>
-            <button class="menu-item" data-open="projects">Projects</button>
-            <button class="menu-item" data-open="resume">Résumé</button>
-            <button class="menu-item" data-open="terminal">Terminal</button>
-        </div>
-        <div class="menubar-right">
-            <span class="open-to-work"><span class="status-dot"></span>open to opportunities</span>
-            <a class="menu-item classic" href="https://asriram07.github.io/MyPortfolio/">Classic ↗</a>
-            <button class="menu-item kbd-btn" id="spotlight-btn" aria-label="Search"><kbd id="kbd-hint">⌘K</kbd></button>
-            <span class="clock" id="clock"></span>
-        </div>
+    <header class="topbar">
+        <a href="#top" class="logo pixel" aria-label="Home"><span class="logo-pac"></span>SA</a>
+        <div class="score pixel" aria-hidden="true"><span class="lbl">SCORE</span><span id="score">000000</span></div>
+        <nav class="nav">
+            <a href="#levels">Levels</a>
+            <a href="#powerups">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
 
-    <!-- Desktop -->
-    <div class="desktop" id="desktop">
-        <div class="desktop-icons" id="desktop-icons"></div>
+    <!-- Scroll lane: Pac-Man eats these dots as you scroll -->
+    <div class="lane" id="lane" aria-hidden="true">
+        <div id="lane-dots"></div>
+        <div id="lane-ghosts"></div>
+        <div class="pac lane-pac" id="lane-pac"></div>
     </div>
 
-    <div id="windows" class="windows"></div>
+    <main>
+        <!-- Hero (pinned while Pac-Man eats across) -->
+        <section class="hero" id="top">
+            <div class="hero-sticky">
+                <p class="ready pixel">PLAYER 1 &nbsp;·&nbsp; <span class="blink">READY!</span></p>
+                <h1 class="pixel hero-name">SRIRAM<br>ANUMANDLA</h1>
+                <p class="hero-role">Software Development Engineer <b>@ Amazon</b> · AI Engineer</p>
+                <p class="hero-lead">I build scalable distributed systems and AI tooling that real engineers use every
+                    day.</p>
+                <div class="hero-track" id="hero-track" aria-hidden="true">
+                    <div id="hero-dots"></div>
+                    <div class="hero-ghost" id="hero-ghost"></div>
+                    <div class="pac hero-pac" id="hero-pac"></div>
+                </div>
+                <p class="scroll-hint pixel">SCROLL TO PLAY ↓</p>
+            </div>
+        </section>
 
-    <!-- Dock -->
-    <nav class="dock" id="dock" aria-label="Dock"></nav>
+        <!-- Score -->
+        <section class="section" id="score-board">
+            <h2 class="section-title pixel"><span class="ghost-dot red"></span>HIGH SCORES</h2>
+            <div class="stats" id="stats"></div>
+        </section>
 
-    <!-- Spotlight -->
-    <div id="spotlight" class="spotlight" hidden>
-        <div class="spot-box" role="dialog" aria-label="Search">
-            <input id="spot-input" type="text" placeholder="Search apps & actions…" autocomplete="off"
-                spellcheck="false">
-            <ul id="spot-list" class="spot-list"></ul>
-            <div class="spot-foot"><span>↑↓ navigate</span><span>↵ open</span><span>esc close</span></div>
-        </div>
-    </div>
+        <!-- Experience -->
+        <section class="section" id="levels">
+            <h2 class="section-title pixel"><span class="ghost-dot pink"></span>LEVELS CLEARED</h2>
+            <div class="levels" id="levels-list"></div>
+        </section>
 
-    <div id="print-root"></div>
+        <!-- Projects -->
+        <section class="section" id="powerups">
+            <h2 class="section-title pixel"><span class="ghost-dot cyan"></span>POWER-UPS</h2>
+            <p class="section-sub">Side projects. Ghosts get scared around here.</p>
+            <div class="powerups" id="powerups-list"></div>
+        </section>
+
+        <!-- Skills -->
+        <section class="section" id="inventory">
+            <h2 class="section-title pixel"><span class="ghost-dot orange"></span>INVENTORY</h2>
+            <div class="inventory" id="inventory-list"></div>
+        </section>
+
+        <!-- Education -->
+        <section class="section" id="education">
+            <h2 class="section-title pixel"><span class="ghost-dot red"></span>BONUS STAGE</h2>
+            <div class="edu maze reveal">
+                <div>
+                    <p class="edu-date">Sep 2023 – May 2025</p>
+                    <h3>Master of Science in Computer Science</h3>
+                    <p class="org">Florida State University</p>
+                </div>
+                <div class="edu-gpa"><span class="pixel">3.8</span><small>GPA / 4.0</small></div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="section contact" id="contact">
+            <p class="pixel game-over">GAME OVER</p>
+            <h2 class="contact-title">Thanks for playing.<br>Let's build something together.</h2>
+            <p class="section-sub">Open to backend, distributed systems and applied-AI roles.</p>
+            <div class="contact-actions">
+                <a class="btn primary" href="https://www.linkedin.com/in/sriram-anumandla/" target="_blank"
+                    rel="noopener noreferrer">LinkedIn ↗</a>
+                <a class="btn" href="https://github.com/asriram07" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                <button class="btn" id="print-btn" type="button">Save résumé (PDF)</button>
+            </div>
+            <p class="insert-coin pixel blink">INSERT COIN TO CONTINUE</p>
+        </section>
+
+        <footer class="footer">
+            <span>© 2026 Sriram Anumandla</span>
+            <a href="https://asriram07.github.io/MyPortfolio/">Classic portfolio ↗</a>
+        </footer>
+    </main>
 
     <script src="script.js"></script>
 </body>
