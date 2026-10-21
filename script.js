@@ -8,12 +8,6 @@
     // ------------------------------------------------------------------
     // Content
     // ------------------------------------------------------------------
-    const STATS = [
-        { label: 'AMAZON', value: 400, suffix: '+', text: 'engineers use COTA, my LLM-powered test analyzer' },
-        { label: 'FIRETV', value: 15, suffix: '%', text: 'fewer system ANRs & crashes across the device fleet' },
-        { label: 'VOICE AI', value: 200, suffix: '+', text: 'concurrent interview sessions on my voice platform' },
-        { label: 'LATENCY', value: 40, suffix: '%', text: 'lower end-to-end voice latency after the WebSocket rewrite' },
-    ];
 
     const LEVELS = [
         {
@@ -100,13 +94,6 @@
 
     const chips = (list) => `<ul class="chips">${list.map((t) => `<li class="chip">${t}</li>`).join('')}</ul>`;
     const bullets = (list) => `<ul class="bullets">${list.map((b) => `<li>${b}</li>`).join('')}</ul>`;
-
-    $('#stats').innerHTML = STATS.map((s) => `
-        <div class="stat maze reveal pop">
-            <div class="stat-label">${s.label}</div>
-            <span class="stat-num" data-count="${s.value}" data-suffix="${s.suffix}">0</span>
-            <p>${s.text}</p>
-        </div>`).join('');
 
     $('#levels-list').innerHTML = LEVELS.map((l, i) => `
         <article class="level maze reveal ${i % 2 ? 'from-right' : ''}">
