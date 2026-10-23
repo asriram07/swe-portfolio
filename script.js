@@ -54,42 +54,49 @@
 
     const PROJECTS = [
         {
-            fruit: '🍒',
-            kind: 'AI & MACHINE LEARNING',
+            score: '90%+ ACCURACY',
+            visual: 'nn',
+            kind: 'AI & Machine Learning',
             title: 'Mixture-of-Experts QA System',
             bullets: [
-                'Trained 6 Small Language Models with PyTorch & Hugging Face on distinct domains, plus a gating network routing queries to the right expert — <b>90%+ accuracy</b>.',
-                'Fast serving pipeline with FastAPI, Docker and Nginx; async low-latency inference on AWS EC2.',
+                'Trained <b>6 small language models</b> with PyTorch and Hugging Face Transformers, each on a distinct domain, plus a <b>gating network</b> that dynamically routes every query to the right expert — <b>90%+ accuracy</b> in tests.',
+                'Built a fast model-serving pipeline with FastAPI, Docker and Nginx: containerized SLMs behind a low-latency, async inference layer deployed on AWS EC2.',
             ],
-            tags: ['PyTorch', 'FastAPI', 'Docker', 'AWS EC2', 'Hugging Face'],
+            tags: ['PyTorch', 'Hugging Face', 'FastAPI', 'Docker', 'Nginx', 'AWS EC2'],
         },
         {
-            fruit: '🍓',
-            kind: 'FULL-STACK & CLOUD',
+            score: 'TALK TO SEARCH',
+            visual: 'map',
+            kind: 'Full-stack & Cloud',
             title: 'Real Estate Enquiry Platform',
             bullets: [
-                'Property search by location and geo-spatial distance with React, Node.js and Express.',
-                '<b>LLM-powered natural-language search</b> translating conversational queries into Elasticsearch filters. AWS EC2 + S3.',
+                'Full-stack platform for property search by user location and <b>geo-spatial distance</b>, built with React, Node.js and Express.',
+                'An <b>LLM-powered natural-language interface</b> that translates conversational queries ("3-bed near downtown under 600k") into structured Elasticsearch filters. Deployed on AWS EC2 with S3 for property images.',
             ],
-            tags: ['React', 'Node.js', 'Elasticsearch', 'AWS S3'],
+            tags: ['React', 'Node.js', 'Express', 'Elasticsearch', 'LLMs', 'AWS S3'],
         },
         {
-            fruit: '🍊',
-            kind: 'DEVOPS & INFRA',
+            score: '100% SELF-HOSTED',
+            visual: 'rack',
+            kind: 'DevOps & Infrastructure',
             title: 'Self-Hosted Cloud Infrastructure',
             bullets: [
-                'Turned a physical machine into a self-hosted Linux cloud with Docker, an Nginx reverse proxy and SSH tunneling.',
-                'CI/CD auto-deploys, Docker Compose orchestration, port forwarding and dynamic DNS.',
+                'Repurposed a physical machine into a <b>self-hosted Linux cloud server</b> with Docker containers, an Nginx reverse proxy and SSH tunneling for secure remote access.',
+                'Set up <b>CI/CD pipelines</b> for automatic deployment, Docker Compose service orchestration, port forwarding and dynamic DNS.',
             ],
-            tags: ['Linux', 'Docker Compose', 'Nginx', 'CI/CD'],
+            tags: ['Linux', 'Docker Compose', 'Nginx', 'CI/CD', 'SSH'],
         },
     ];
 
+    // Strongest skills first in each row; `core` ones are highlighted.
     const SKILLS = [
-        { name: 'LANGUAGES', color: 'red', items: ['C++', 'Java', 'Python', 'Go', 'TypeScript', 'JavaScript', 'SQL', 'HTML/CSS'] },
-        { name: 'FRAMEWORKS', color: 'pink', items: ['React', 'Node.js', 'Express', 'FastAPI', 'Flask', 'PyTorch', 'TensorFlow', 'LangGraph', 'Scikit-learn'] },
-        { name: 'DATA & CLOUD', color: 'cyan', items: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Pinecone', 'VectorDB', 'AWS EC2', 'RDS', 'SageMaker', 'Bedrock', 'Gemini Vertex'] },
-        { name: 'TOOLS', color: 'orange', items: ['Docker', 'Kubernetes', 'Jenkins', 'Kafka', 'Distributed Systems', 'Microservices', 'Agent Orchestration', 'GenAI'] },
+        { name: 'Languages', color: 'red', core: ['Python', 'Java', 'C++'], items: ['Go', 'TypeScript', 'JavaScript', 'SQL'] },
+        { name: 'AI / ML', color: 'pink', core: ['PyTorch', 'LLMs & RAG', 'LangGraph'], items: ['Agent orchestration', 'Hugging Face', 'TensorFlow', 'Scikit-learn'] },
+        { name: 'Backend & Systems', color: 'cyan', core: ['Distributed systems', 'Microservices'], items: ['Node.js', 'FastAPI', 'Express', 'Flask', 'Kafka', 'REST', 'WebSockets'] },
+        { name: 'Cloud', color: 'orange', core: ['AWS'], items: ['EC2', 'S3', 'SageMaker', 'Bedrock', 'DynamoDB', 'SQS', 'RDS', 'Gemini Vertex'] },
+        { name: 'Databases', color: 'red', core: ['PostgreSQL'], items: ['MySQL', 'MongoDB', 'Redis', 'Elasticsearch', 'Pinecone / VectorDB'] },
+        { name: 'DevOps', color: 'pink', core: ['Docker'], items: ['Kubernetes', 'CI/CD', 'Jenkins', 'Linux', 'Nginx'] },
+        { name: 'Frontend', color: 'cyan', core: ['React'], items: ['HTML / CSS'] },
     ];
 
     const chips = (list) => `<ul class="chips">${list.map((t) => `<li class="chip">${t}</li>`).join('')}</ul>`;
@@ -104,19 +111,14 @@
             ${chips(l.tags)}
         </article>`).join('');
 
-    $('#powerups-list').innerHTML = PROJECTS.map((p) => `
-        <article class="powerup maze reveal pop">
-            <div class="fruit" aria-hidden="true">${p.fruit}</div>
-            <div class="kind">${p.kind}</div>
-            <h3>${p.title}</h3>
-            ${bullets(p.bullets)}
-            ${chips(p.tags)}
-        </article>`).join('');
 
     $('#inventory-list').innerHTML = SKILLS.map((g) => `
-        <div class="inv maze reveal pop">
+        <div class="skill-row reveal">
             <h3><span class="ghost-dot ${g.color}"></span>${g.name}</h3>
-            ${chips(g.items)}
+            <ul class="chips">
+                ${g.core.map((t) => `<li class="chip core">${t}</li>`).join('')}
+                ${g.items.map((t) => `<li class="chip">${t}</li>`).join('')}
+            </ul>
         </div>`).join('');
 
     // ------------------------------------------------------------------
@@ -138,6 +140,174 @@
     const heroGhostBox = $('#hero-ghosts');
     heroGhostBox.innerHTML = GHOST_COLORS.map((c) => `<div class="hero-ghost">${ghostSVG(c)}</div>`).join('');
     const heroGhosts = [...heroGhostBox.children];
+
+    // ------------------------------------------------------------------
+    // Project visuals: one animated illustration per project
+    // ------------------------------------------------------------------
+    const EXPERTS = [0, 1, 2, 3, 4, 5].map((i) => ({ x: 168, y: 20 + i * 26 }));
+
+    const VISUALS = {
+        // Neural net: query → gating router → one of 6 experts → answer
+        nn: () => `
+            <svg viewBox="0 0 240 190" class="nn">
+                <line class="e e-in" x1="26" y1="85" x2="88" y2="85"/>
+                ${EXPERTS.map((e, i) => `
+                    <line class="e e-g" data-i="${i}" x1="88" y1="85" x2="${e.x}" y2="${e.y}"/>
+                    <line class="e e-o" data-i="${i}" x1="${e.x}" y1="${e.y}" x2="220" y2="85"/>`).join('')}
+                <g class="node n-in"><circle cx="26" cy="85" r="10"/><text x="26" y="89">Q</text></g>
+                <g class="node n-gate"><circle cx="88" cy="85" r="15"/><text x="88" y="89">G</text></g>
+                ${EXPERTS.map((e, i) => `<g class="node n-ex" data-i="${i}"><circle cx="${e.x}" cy="${e.y}" r="8"/></g>`).join('')}
+                <g class="node n-out"><circle cx="220" cy="85" r="10"/><text x="220" y="89">A</text></g>
+                <text class="cap" x="26" y="182">query</text>
+                <text class="cap" x="88" y="182">router</text>
+                <text class="cap" x="168" y="182">experts</text>
+                <text class="cap" x="220" y="182">answer</text>
+            </svg>`,
+
+        // Map: natural-language query types in, matching pins light up
+        map: () => {
+            const blocks = [
+                [14, 46, 50, 34], [72, 46, 44, 34], [124, 46, 54, 34], [186, 46, 40, 34],
+                [14, 88, 36, 40], [58, 88, 58, 40], [186, 88, 40, 40],
+                [14, 136, 62, 40], [84, 136, 32, 40], [124, 136, 102, 40],
+            ];
+            const pins = [[38, 70], [94, 72], [150, 66], [34, 120], [86, 118], [206, 112], [170, 162]];
+            return `
+            <svg viewBox="0 0 240 190" class="map">
+                ${blocks.map(([x, y, w, h]) => `<rect class="block" x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/>`).join('')}
+                <rect class="park" x="124" y="88" width="54" height="40" rx="3"/>
+                <path class="river" d="M-5 180 C 40 150, 70 186, 120 132 S 200 120, 250 84"/>
+                ${pins.map(([x, y], i) => `
+                    <g class="pin" data-i="${i}" transform="translate(${x} ${y})">
+                        <g class="pin-inner"><path d="M0 0C-5-7-9-11-9-16a9 9 0 1 1 18 0c0 5-4 9-9 16z"/><circle cy="-16" r="3.2"/></g>
+                    </g>`).join('')}
+                <rect class="sbar" x="10" y="8" width="220" height="26" rx="13"/>
+                <text class="sicon" x="24" y="25">⌕</text>
+                <text class="stext" x="36" y="25"></text>
+            </svg>`;
+        },
+
+        // Rack: request flows through nginx → app → db, terminal deploys
+        rack: () => `
+            <div class="rack">
+                <span class="packet"></span>
+                ${['nginx', 'app', 'postgres'].map((n, i) => `
+                    <div class="unit"><span class="u-name">${n}</span>
+                        <span class="leds"><i style="animation-delay:${i * 0.3}s"></i><i style="animation-delay:${i * 0.3 + 0.5}s"></i><i class="y" style="animation-delay:${i * 0.2 + 0.9}s"></i></span>
+                    </div>`).join('')}
+            </div>
+            <div class="mini-term"><div class="mt-bar"><i></i><i></i><i></i></div><pre class="mt-out"></pre></div>`,
+    };
+
+    $('#powerups-list').innerHTML = PROJECTS.map((p, i) => `
+        <article class="cart reveal ${i % 2 ? 'from-right' : ''}">
+            <div class="cart-body">
+                <p class="cart-kind">${p.kind}</p>
+                <h3 class="cart-name">${p.title}</h3>
+                ${bullets(p.bullets)}
+                ${chips(p.tags)}
+            </div>
+            <div class="cart-screen" aria-hidden="true">
+                <div class="viz viz-${p.visual}" data-visual="${p.visual}">${VISUALS[p.visual]()}</div>
+                <div class="cart-label pixel">HIGH SCORE</div>
+                <div class="cart-title pixel">${p.score}</div>
+            </div>
+        </article>`).join('');
+
+    // Animation loops only tick while their card is on screen.
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const vizVisible = new WeakMap();
+    const vizIO = new IntersectionObserver((entries) => entries.forEach((en) => vizVisible.set(en.target, en.isIntersecting)));
+    async function whenVisible(el) {
+        while (!vizVisible.get(el)) await sleep(400);
+    }
+
+    async function runNN(el) {
+        const q = (s) => el.querySelectorAll(s);
+        const set = (s, on) => q(s).forEach((n) => n.classList.toggle('on', on));
+        let pick = 0;
+        for (;;) {
+            await whenVisible(el);
+            pick = (pick + 1 + Math.floor(Math.random() * 5)) % 6;
+            set('.on', false);
+            set('.n-in, .e-in', true);
+            await sleep(450);
+            set('.n-gate', true);
+            await sleep(450);
+            set(`.e-g[data-i="${pick}"], .n-ex[data-i="${pick}"]`, true);
+            await sleep(550);
+            set(`.e-o[data-i="${pick}"], .n-out`, true);
+            await sleep(1300);
+        }
+    }
+
+    async function runMap(el) {
+        const text = el.querySelector('.stext');
+        const pins = [...el.querySelectorAll('.pin')];
+        const QUERIES = [
+            ['3-bed near downtown', [1, 2, 4]],
+            ['condo under $600k', [0, 5]],
+            ['house with a yard', [3, 6]],
+        ];
+        let k = 0;
+        for (;;) {
+            await whenVisible(el);
+            const [query, hits] = QUERIES[k++ % QUERIES.length];
+            pins.forEach((p) => p.classList.remove('hit', 'dim'));
+            for (let n = 1; n <= query.length; n++) {
+                text.textContent = query.slice(0, n) + '|';
+                await sleep(55);
+            }
+            text.textContent = query;
+            await sleep(250);
+            pins.forEach((p, i) => p.classList.add(hits.includes(i) ? 'hit' : 'dim'));
+            await sleep(2200);
+            text.textContent = '';
+        }
+    }
+
+    async function runRack(el) {
+        const out = el.querySelector('.mt-out');
+        const LINES = [
+            ['$ git push origin main', 'cmd'],
+            ['› ci: 42 tests passed ✓', 'ok'],
+            ['› docker compose up -d', 'cmd'],
+            ['› nginx: reloaded', ''],
+            ['✓ deployed in 14s', 'ok'],
+        ];
+        for (;;) {
+            await whenVisible(el);
+            out.innerHTML = '';
+            for (const [line, cls] of LINES) {
+                const row = document.createElement('span');
+                row.className = cls;
+                out.appendChild(row);
+                for (let n = 1; n <= line.length; n++) {
+                    row.textContent = line.slice(0, n);
+                    await sleep(cls === 'cmd' ? 40 : 12);
+                }
+                out.appendChild(document.createTextNode('\n'));
+                await sleep(320);
+            }
+            await sleep(2000);
+        }
+    }
+
+    document.querySelectorAll('.viz').forEach((el) => {
+        const kind = el.dataset.visual;
+        if (reduced) {
+            // Static end-state for reduced motion.
+            if (kind === 'nn') el.querySelectorAll('.n-in, .e-in, .n-gate, [data-i="2"], .n-out').forEach((n) => n.classList.add('on'));
+            if (kind === 'map') {
+                el.querySelector('.stext').textContent = '3-bed near downtown';
+                el.querySelectorAll('.pin').forEach((p, i) => p.classList.add([1, 2, 4].includes(i) ? 'hit' : 'dim'));
+            }
+            if (kind === 'rack') el.querySelector('.mt-out').textContent = '$ docker compose up -d\n✓ deployed in 14s';
+            return;
+        }
+        vizIO.observe(el);
+        ({ nn: runNN, map: runMap, rack: runRack })[kind](el);
+    });
 
     // ------------------------------------------------------------------
     // Dots (lane + hero track)
@@ -237,7 +407,8 @@
 
         const tw = heroTrack.clientWidth;
         const hs = heroPac.offsetWidth;
-        const speed = Math.max(120, tw / 7);
+        // Crosses the track in ~11s (min 80px/s on narrow screens).
+        const speed = Math.max(80, tw / 11);
 
         if (game.phase === 'pause') {
             if (t >= game.pauseUntil) resetRound();
@@ -373,10 +544,12 @@
         entries.forEach((en) => document.body.classList.toggle('scared', en.isIntersecting));
     }, { threshold: 0.25 }).observe($('#powerups'));
 
-    $('#print-btn').addEventListener('click', () => {
-        document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
-        window.print();
-    });
+    document.querySelectorAll('[data-print]').forEach((b) =>
+        b.addEventListener('click', () => {
+            document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
+            window.print();
+        }),
+    );
 
     // Fonts change layout widths; rebuild once they're ready.
     buildDots();

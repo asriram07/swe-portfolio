@@ -21,9 +21,13 @@
         <a href="#top" class="logo pixel" aria-label="Home"><span class="logo-pac"></span>SA</a>
         <div class="score pixel" aria-hidden="true"><span class="lbl">SCORE</span><span id="score">000000</span></div>
         <nav class="nav">
-            <a href="#levels">Levels</a>
+            <a href="#about">About</a>
+            <a href="#levels">Experience</a>
             <a href="#powerups">Projects</a>
             <a href="#contact">Contact</a>
+            <a class="nav-cta" href="https://www.linkedin.com/in/sriram-anumandla/" target="_blank"
+                rel="noopener noreferrer">LinkedIn ↗</a>
+            <button type="button" class="nav-cta primary" data-print>Résumé ↓</button>
         </nav>
     </header>
 
@@ -49,32 +53,59 @@
                     <div class="pac hero-pac chomp" id="hero-pac"></div>
                     <div class="score-pop pixel" id="hero-pop"></div>
                 </div>
-                <p class="scroll-hint pixel">SCROLL DOWN ↓</p>
+                <p class="scroll-hint pixel">SCROLL ↓</p>
+            </div>
+        </section>
+
+        <!-- About / summary -->
+        <section class="section" id="about">
+            <p class="eyebrow pixel"><span class="ghost-dot orange"></span>PLAYER PROFILE</p>
+            <h2 class="section-title">About Me</h2>
+            <div class="about-card reveal">
+                <div class="about-text">
+                    <p>I'm a <b>Software Development Engineer at Amazon</b>, where I build LLM-powered developer
+                        tools and multi-agent ML infrastructure for FireOS.</p>
+                    <p>I'm happiest where <b>distributed systems meet AI</b> — taking models out of notebooks and
+                        making them fast, reliable and genuinely useful in production. Before Amazon, I built a
+                        real-time voice-AI interview platform at HireBest and enterprise integrations at ServiceNow,
+                        and earned my MS in Computer Science from Florida State.</p>
+                </div>
+                <ul class="about-facts">
+                    <li><span>Based in</span>Sunnyvale, CA</li>
+                    <li><span>Currently</span>SDE @ Amazon</li>
+                    <li><span>Focus</span>Distributed systems · Applied AI</li>
+                    <li><span>Education</span>MS CS, Florida State · 3.8</li>
+                    <li><span>Off the clock</span>Tennis · Ice skating · Dance · Surfing</li>
+                </ul>
             </div>
         </section>
 
         <!-- Experience -->
         <section class="section" id="levels">
-            <h2 class="section-title pixel"><span class="ghost-dot pink"></span>LEVELS CLEARED</h2>
+            <p class="eyebrow pixel"><span class="ghost-dot pink"></span>LEVELS</p>
+            <h2 class="section-title">Work Experience</h2>
             <div class="levels" id="levels-list"></div>
         </section>
 
         <!-- Projects -->
         <section class="section" id="powerups">
-            <h2 class="section-title pixel"><span class="ghost-dot cyan"></span>POWER-UPS</h2>
-            <p class="section-sub">Side projects. Ghosts get scared around here.</p>
+            <p class="eyebrow pixel"><span class="ghost-dot cyan"></span>POWER-UPS</p>
+            <h2 class="section-title">Projects</h2>
             <div class="powerups" id="powerups-list"></div>
         </section>
 
         <!-- Skills -->
         <section class="section" id="inventory">
-            <h2 class="section-title pixel"><span class="ghost-dot orange"></span>INVENTORY</h2>
+            <p class="eyebrow pixel"><span class="ghost-dot orange"></span>INVENTORY</p>
+            <h2 class="section-title">Skills</h2>
+            <p class="skill-legend"><span class="chip core">Yellow</span> = what I use most</p>
             <div class="inventory" id="inventory-list"></div>
         </section>
 
         <!-- Education -->
         <section class="section" id="education">
-            <h2 class="section-title pixel"><span class="ghost-dot red"></span>BONUS STAGE</h2>
+            <p class="eyebrow pixel"><span class="ghost-dot red"></span>BONUS STAGE</p>
+            <h2 class="section-title">Education</h2>
             <div class="edu maze reveal">
                 <div>
                     <p class="edu-date">Sep 2023 – May 2025</p>
@@ -88,15 +119,19 @@
         <!-- Contact -->
         <section class="section contact" id="contact">
             <p class="pixel game-over">GAME OVER</p>
-            <h2 class="contact-title">Thanks for playing.<br>Let's build something together.</h2>
+            <h2 class="contact-title">Thanks for stopping by.<br>Let's build something together.</h2>
             <p class="section-sub">Open to backend, distributed systems and applied-AI roles.</p>
             <div class="contact-actions">
                 <a class="btn primary" href="https://www.linkedin.com/in/sriram-anumandla/" target="_blank"
                     rel="noopener noreferrer">LinkedIn ↗</a>
                 <a class="btn" href="https://github.com/asriram07" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-                <button class="btn" id="print-btn" type="button">Save résumé (PDF)</button>
+                <button class="btn" id="print-btn" type="button" data-print>Save résumé (PDF)</button>
             </div>
-            <p class="insert-coin pixel blink">INSERT COIN TO CONTINUE</p>
+            <div class="bonus-round">
+                <p class="pixel bonus-label">BONUS ROUND</p>
+                <button type="button" class="play-btn pixel" data-play>▶ PLAY PAC-MAN</button>
+                <p class="play-note">30 sec · collect my skills</p>
+            </div>
         </section>
 
         <footer class="footer">
@@ -105,7 +140,55 @@
         </footer>
     </main>
 
+    <!-- Optional mini game -->
+    <div class="game" id="game" hidden role="dialog" aria-modal="true" aria-label="Pac-Man mini game">
+        <div class="game-box">
+            <div class="game-head">
+                <span class="pixel">SRIRAM'S MAZE</span>
+                <button type="button" class="game-close" id="g-close" aria-label="Close game">✕</button>
+            </div>
+            <div class="game-hud pixel">
+                <span>SCORE <b id="g-score">0</b></span>
+                <span>TIME <b id="g-time">30</b></span>
+                <span>BEST <b id="g-best">0</b></span>
+                <span class="lives" id="g-lives" aria-label="Lives"></span>
+            </div>
+            <div class="game-stage">
+                <canvas id="g-canvas"></canvas>
+                <div class="game-overlay" id="g-start">
+                    <p class="pixel overlay-title">READY?</p>
+                    <p>Eat the <b class="y">yellow dots</b> to collect my skills.<br>
+                        Dodge <span class="g-red">Bugs</span>, <span class="g-pink">Deadlines</span>,
+                        <span class="g-cyan">Merge Conflicts</span> &amp; <span class="g-orange">Scope Creep</span>.<br>
+                        Power pellets let you eat them back.</p>
+                    <p class="controls">Arrow keys / WASD · swipe on mobile</p>
+                    <button type="button" class="btn primary" id="g-go">Start · 30 seconds</button>
+                </div>
+                <div class="game-overlay" id="g-end" hidden>
+                    <p class="pixel end-title">WELL PLAYED! YOUR SCORE: <span id="g-end-score">0</span></p>
+                    <p class="end-lead">…but you came here to find me 👇</p>
+                    <div class="end-card">
+                        <p class="end-name">Sriram Anumandla</p>
+                        <p class="end-role">SDE @ Amazon · Distributed systems + AI</p>
+                        <p class="end-facts">400+ engineers use his tools · MS CS, Florida State</p>
+                    </div>
+                    <div class="end-actions">
+                        <button type="button" class="btn primary" id="g-about">Learn more about me →</button>
+                        <button type="button" class="btn" id="g-resume">Résumé ↓</button>
+                    </div>
+                </div>
+            </div>
+            <div class="dpad" id="dpad" aria-hidden="true">
+                <button type="button" data-dir="up">▲</button>
+                <button type="button" data-dir="left">◀</button>
+                <button type="button" data-dir="down">▼</button>
+                <button type="button" data-dir="right">▶</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    <script src="game.js"></script>
 </body>
 
 </html>
